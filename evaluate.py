@@ -1,35 +1,11 @@
-from keras.layers import *
-from keras.optimizers import *
-from keras.datasets import mnist, cifar10
-from keras.models import Model
-import numpy as np
-from keras.callbacks import ModelCheckpoint
-from keras.preprocessing.image import ImageDataGenerator
-# from scipy.utils import Shuffle
-
+from keras.models import *
+# from dataset_cifar10 import SiameseNetworkModel
+from keras.datasets import cifar10
+from keras.layers import * 
 
 (X_train, y_train), (X_test, y_test) = cifar10.load_data()
-
-# X_train = np.expand_dims(X_train, axis = 3) / 255
-# X_test = np.expand_dims(X_test, axis = 3) / 255
-X_train = X_train / 255
 X_test = X_test / 255
-
-endp = int(X_train.shape[0] * 0.9)
-X_val = X_train[endp:]
-y_val = y_train[endp:]
-X_train = X_train[:endp]
-y_train = y_train[:endp]
-
-IMG_SHAPE = X_train.shape[1:]
-
-datagen = ImageDataGenerator(
-          rotation_range = 10,
-          width_shift_range = 0.1,
-          height_shift_range = 0.1, 
-          horizontal_flip = True
-)
-
+IMG_SHAPE = X_test.shape[1:]
 
 def SiameseNetworkModel():
   input_ = Input(shape = IMG_SHAPE)
@@ -78,24 +54,11 @@ def SiameseNetworkModel():
   return Model(inputs = [input_], outputs = [softmax])
 
 model = SiameseNetworkModel()
-model.summary()
 
-checkpoint = ModelCheckpoint('weight.hdf5', monitor = 'val_acc', save_best_only = True, mode = 'max', verbose = 1)
 
 model.compile(optimizer = 'adam', loss = 'sparse_categorical_crossentropy', metrics = ['accuracy'])
-
-# model.fit(X_train, y_train, epochs = 25, validation_split = 0.1, callbacks = [checkpoint], batch_size = 32)
-model.fit_generator(datagen.flow(X_train, y_train, batch_size = 32), epochs = 100, steps_per_epoch = X_train.shape[0] / 32, validation_data = (X_val, y_val), callbacks = [checkpoint])
+model.load_weights('weight_798_val.hdf5')
 
 loss, acc = model.evaluate(X_test, y_test)
 
 print('loss: {}, acc: {}'.format(loss, acc))
-
-
-#loss: 1.3713039035797119, acc: 0.6387
-
-#loss: 1.1491667903900147, acc: 0.6625
-
-#current model with 100 epochs => loss: 0.6515964792728424, acc: 0.7875
-
-
