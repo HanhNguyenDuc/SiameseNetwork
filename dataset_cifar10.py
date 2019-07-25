@@ -70,8 +70,8 @@ def SiameseNetworkModel():
   #Block classification
   concat_ = Concatenate()([maxpool_2_128, maxpool_1_128])
   flatten_ = Flatten()(concat_)
-#   dense_ = Dense(512, activation = 'relu')(flatten_)
-  dropout_ = Dropout(0.1)(flatten_)
+  dense_ = Dense(512, activation = 'relu')(flatten_)
+  dropout_ = Dropout(0.1)(dense_)
   
   softmax = Dense(10, activation = 'softmax')(dropout_)
   
@@ -96,6 +96,8 @@ print('loss: {}, acc: {}'.format(loss, acc))
 
 #loss: 1.1491667903900147, acc: 0.6625
 
-#current model with 100 epochs => loss: 0.6515964792728424, acc: 0.7875
+#dropout 0.25 -> 0.1 with 100 epochs => loss: 0.6515964792728424, acc: 0.7875
+
+#add dense(512) layers with 100 epochs => loss: 0.7207691070795059, acc: 0.818
 
 
