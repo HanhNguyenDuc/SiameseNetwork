@@ -66,3 +66,8 @@ model.fit(X_train, y_train, epochs = 25, validation_split = 0.1, callbacks = [ch
 loss, acc = model.evaluate(X_test, y_test)
 
 print('loss: {}, acc: {}'.format(loss, acc))
+
+
+#mnist dataset: loss: 0.08611345658177452, acc: 0.9904
+#cifar10 dataset: loss: 1.3713039035797119, acc: 0.6387
+
