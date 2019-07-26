@@ -51,6 +51,11 @@ def SiameseNetworkModel():
   norm_1_128 = BatchNormalization()(drop_1_128)
   maxpool_1_128 = MaxPooling2D(pool_size = (2, 2))(norm_1_128)
   
+  conv_1_256 = Conv2D(256, kernel_size = (3, 3), padding = 'same', dilation_rate = (1, 1))(maxpool_1_128)
+  drop_1_256 = Dropout(0.1)(conv_1_256)
+  norm_1_256 = BatchNormalization()(drop_1_256)
+  maxpool_1_256 = MaxPooling2D(pool_size = (2, 2))(norm_1_256)
+  
   #Block conv 2
   conv_2_32 = Conv2D(32, kernel_size = (3, 3), padding = 'same', dilation_rate = (2, 2))(input_)
   drop_2_32 = Dropout(0.1)(conv_2_32)
@@ -66,9 +71,14 @@ def SiameseNetworkModel():
   drop_2_128 = Dropout(0.1)(conv_2_128)
   norm_2_128 = BatchNormalization()(drop_2_128)
   maxpool_2_128 = MaxPooling2D(pool_size = (2, 2))(norm_2_128)
+  
+  conv_2_256 = Conv2D(256, kernel_size = (3, 3), padding = 'same', dilation_rate = (2, 2))(maxpool_2_128)
+  drop_2_256 = Dropout(0.1)(conv_2_256)
+  norm_2_256 = BatchNormalization()(drop_2_256)
+  maxpool_2_256 = MaxPooling2D(pool_size = (2, 2))(norm_2_256)
 
   #Block classification
-  concat_ = Concatenate()([maxpool_2_128, maxpool_1_128])
+  concat_ = Concatenate()([maxpool_2_256, maxpool_1_256])
   flatten_ = Flatten()(concat_)
   dense_ = Dense(512, activation = 'relu')(flatten_)
   dropout_ = Dropout(0.1)(dense_)
