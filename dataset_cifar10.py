@@ -100,4 +100,6 @@ print('loss: {}, acc: {}'.format(loss, acc))
 
 #add dense(512) layers with 100 epochs => loss: 0.7207691070795059, acc: 0.818
 
+#add conv(256) under each conv block => 0.5914149845719338, acc: 0.8409
+
 
